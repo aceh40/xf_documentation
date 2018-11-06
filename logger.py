@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 start_time = datetime.now()
-logFile = os.path.join(settings.PROJECT_DIR, r'log\XF_Docs.log')
+logFile = os.path.join(settings.PROJECT_DIR, r'logs\XF_Docs.log')
 logFormat = '%(asctime)s -- %(levelname)s -- %(message)s'
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

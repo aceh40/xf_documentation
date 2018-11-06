@@ -15,6 +15,7 @@ import re
 import settings
 from site_scanner import site_scanner
 from logger import logger, start_time
+from file_scanner import file_dict
 
 # =============================================================================
 # Basic Variables
@@ -108,31 +109,19 @@ class SupportDocument(object):
         logger.debug('Source Document target file name: {}'.format(target_name))
         return target_name
 
-    def find_file_path(self):
-        """ Find the file locally to determine where to download.
-        """
-        file_name = self.get_target_name()
-        print (settings.TARGET_ROOT_DIR)
-        for root, dirs, files in os.walk(settings.TARGET_ROOT_DIR):
-            print(root)
-            print(dirs)
-            print(files)
-            if file_name in files:
-                return root
-            else:
-                return settings.DEFAULT_DOC_DIR
-
     def get_target_full_dir(self):
         """
         :return: the full path where the file will be downloaded.
         """
-        if self.target_dir is None:
-            target_full_dir = self.find_file_path()
-        elif len(self.target_dir) <= 3:
-            target_full_dir = self.find_file_path()
+        file_name = self.get_target_name()
+        if self.target_dir is not None and len(self.target_dir) > 3:
+            target_full_dir = self.target_dir
+        elif file_name in file_dict.keys():
+            target_full_dir = file_dict[file_name]
         else:
-            target_full_dir = os.path.join(settings.TARGET_ROOT_DIR, self.target_dir)
+            target_full_dir = settings.DEFAULT_DOC_DIR
         return target_full_dir
+    #~TODO: See how you can save the detected directory back to the excel file. Is the file even necessary, except for preferred name?
 
     def download(self, session):
         """ Opens request.Session, tries to log in, and downloads the files.
@@ -142,7 +131,7 @@ class SupportDocument(object):
         os.chdir(target_path)
         schema_get = session.get(self.get_full_url(), verify=False)
         target_name = self.get_target_name()
-        logger.debug('Preparing to download file {} to {}.'.format(target_name.upper(), target_path))
+        logger.debug('Starting download of file {} to {}.'.format(target_name.upper(), target_path))
         with open(os.path.join(target_path, target_name), "wb") as code:
             code.write(schema_get.content)
         logger.info('{} file has been downloaded successfully.'.format(target_name.upper()))
@@ -187,7 +176,7 @@ def main():
     with requests.Session() as s:
         authenticate(s)
         site_scanner(s)
-        df = pd.read_excel(io=settings.DATA_FILE, sheet_name='XpressfeedDocs', usecols='A:D')
+        df = pd.read_excel(io=settings.DATA_FILE, sheet_name='Sheet1', usecols='A:D')
         logger.info("Opening data file {}.".format(settings.DATA_FILE))
         dfx = df.tail(5)
         for i in dfx.index:
@@ -196,7 +185,7 @@ def main():
             new_name = df.iloc[i, 2]
             target_dir = df.iloc[i, 3]
             doc = SupportDocument(source_link, original_name, target_dir, new_name)
-            logger.debug("Preparing for download of file {}...".format(original_name.upper()))
+            logger.debug("Preparing to download of file {}...".format(original_name.upper()))
             doc.download(s)
             doc_count += 1
 

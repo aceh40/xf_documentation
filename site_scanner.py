@@ -40,7 +40,7 @@ def get_file_name_from_link(url):
     logger.debug('Extracting file name from link...')
     mo = file_name_regex.search(url)
     if mo is not None:
-        logger.debug('File name {} extracted.'.format(upper(mo.group(0))))
+        logger.debug('File name {} extracted.'.format(mo.group(0).upper()))
         return mo.group(0)
     else:
         return ''
@@ -100,21 +100,14 @@ def site_scanner(session):
         logger.debug('Extracted file name {} from new document URL.'.format(file_name))
         link_list.append(item)
         name_list.append(file_name)
-        logger.debug('Appended new document name and URL to new document lists.')
+    logger.debug('Appended new document names and URLs to new document lists.')
     df_new = pd.DataFrame({'link': link_list,
                            'file_name': name_list
                            })
     logger.info('Concatenated new items DataFrame with main DataFrame.')
-    concat = pd.concat([df, df_new], ignore_index=True)
+    concat = pd.concat([df, df_new], ignore_index=True, sort=False)
     concat.to_excel(settings.DATA_FILE, sheet_name='XpressfeedDocs', index=False)
     logger.info('Saved concatenated DataFrame to {}.'.format(settings.DATA_FILE))
-    link_list.append(item)
-    name_list.append(file_name)
-    df_new = pd.DataFrame({'link': link_list,
-                           'file_name': name_list
-                           })
-    concat = pd.concat([df, df_new], ignore_index=True)
-    concat.to_excel(settings.DATA_FILE, sheet_name='XpressfeedDocs', index=False)
 
 # load_data_file()
 # site_scanner()
