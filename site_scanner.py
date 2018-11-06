@@ -50,7 +50,7 @@ def load_data_file():
     """ Get the excel file into a data frame.
     :return: pandas DataFrame
     """
-    df = pd.read_excel(io=settings.DATA_FILE, sheet_name='XpressfeedDocs', usecols='A:D')
+    df = pd.read_excel(io=settings.DATA_FILE, sheet_name='Sheet1', usecols='A:D')
     logger.info('Pandas DataFrame loaded from {}.'.format(os.path.split(settings.DATA_FILE)[1]))
     return df
 
@@ -106,7 +106,7 @@ def site_scanner(session):
                            })
     logger.info('Concatenated new items DataFrame with main DataFrame.')
     concat = pd.concat([df, df_new], ignore_index=True, sort=False)
-    concat.to_excel(settings.DATA_FILE, sheet_name='XpressfeedDocs', index=False)
+    concat.to_excel(settings.DATA_FILE, sheet_name='Sheet1', index=False)
     logger.info('Saved concatenated DataFrame to {}.'.format(settings.DATA_FILE))
 
 # load_data_file()
