@@ -1,0 +1,7 @@
+.env
+.xlsx
+.idea/
+data_files/
+test_code/
+app/ve/
+xf_documentation.bat
