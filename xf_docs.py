@@ -143,8 +143,6 @@ def authenticate(session):
     r = session.get(settings.HOME_PAGE)
     logger.info('Redirected to: {}'.format(r.url))
 
-    #~TODO  - Find out why regex does not work.
-
     mo = login_page_regex.search(r.url)
     logger.info("Login regex result: {}".format(mo))
     if mo is not None:  # You are taken to the login page and need to login
