@@ -1,4 +1,4 @@
-#! .\app\ve\Scripts\python.exe
+#! C:\Users\assen_bankov\PycharmProjects\xf_documentation\app\ve\Scripts\python.exe
 
 """
 Created on Wed Nov  8 07:36:33 2017
@@ -177,7 +177,7 @@ def main():
         df = pd.read_excel(io=settings.DATA_FILE, sheet_name='Sheet1', usecols='A:D')
         logger.info("Opening data file {}.".format(settings.DATA_FILE))
         dfx = df.tail(5)
-        for i in dfx.index:
+        for i in df.index:
             source_link = df.iloc[i, 1]
             original_name = df.iloc[i, 0]
             new_name = df.iloc[i, 2]
