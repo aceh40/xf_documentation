@@ -2,7 +2,7 @@ import settings
 import os
 from logger import logger
 
-path = r'C:\Users\assen_bankov\Box Sync\Products\XPRESSFEED'
+path = r''
 
 def file_scanner(path):
     """ Return the list of all files and folders in Xpressfeed directory.
